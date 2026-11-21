@@ -300,7 +300,7 @@ object DreamCloudsEngine {
         val size = bw * bh
 
         if (blurBitmap == null || blurBitmap!!.isRecycled || blurBitmap!!.width != bw || blurBitmap!!.height != bh) {
-            blurBitmap?.recycle()
+            // GC releases old bitmap safely
             blurBitmap = Bitmap.createBitmap(bw, bh, Bitmap.Config.ARGB_8888)
             blurCanvas = Canvas(blurBitmap!!)
             blurPixels = IntArray(size)
@@ -445,8 +445,8 @@ object DreamCloudsEngine {
 }
 
 @Composable
-fun DreamSkyBackground(modifier: Modifier = Modifier) {
-    LaunchedEffect(Unit) {
+fun DreamSkyBackground(modifier: Modifier = Modifier, driveAnimation: Boolean = true) {
+    if (driveAnimation) LaunchedEffect(Unit) {
         var lastNanos = 0L
         while (true) {
             withFrameNanos { now ->
